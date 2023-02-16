@@ -43,16 +43,29 @@ class Deck {
 	}
 }
 
+class TestDeck extends Deck {
+	dealStraight() {
+		const hand = new Hand;
+		hand.addCard(new Card('10','Hearts'));
+		hand.addCard(new Card('J','Hearts'));
+		hand.addCard(new Card('Q','Diamonds'));
+		hand.addCard(new Card('K','Spades'));
+		hand.addCard(new Card('A','Clubs'));
+		
+		return hand;
+	}
+}
+
 class Hand {
-	constructor() {
-		this.cards = [];
+	constructor(cards) {
+		this.cards = cards || [];
 		this.ranks = [];
 		this.suits = {
 			'Hearts': 0,
 			'Diamonds': 0,
 			'Clubs': 0,
 			'Spades': 0
-		}
+		};
 	}
 
 	addCard(card) {
@@ -65,6 +78,15 @@ class Hand {
 		// push rank to array, sort
 		this.ranks.push(card.getRankValue());
 		this.ranks.sort((a, b) => a - b);
+	}
+
+	isStraight() {
+		for (let i = 0; i < this.ranks.length; i++) {
+			if (this.ranks[i + 1] - this.ranks[i] !== 1) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
 
@@ -104,7 +126,20 @@ hand.addCard(deck.dealCard());
 hand.addCard(deck.dealCard());
 hand.addCard(deck.dealCard());
 hand.addCard(deck.dealCard());
-console.log(hand.cards)
-console.log(hand.ranks);
-console.log(hand.suits );
 
+// test hand
+console.log('HAND:')
+console.log(hand.cards)
+console.log('RANKS:')
+console.log(hand.ranks);
+console.log('SUITS:')
+console.log(hand.suits);
+console.log('Straight?')
+console.log(hand.isStraight())
+
+console.log(`\\\\\\\\\\\\\\\\\\\\\\\\`)
+let testDeck = new TestDeck;
+let handStraight = testDeck.dealStraight();
+console.log(handStraight.cards);
+console.log(handStraight.ranks);
+console.log(`IS STRAIGHT: ${handStraight.isStraight()}`)
