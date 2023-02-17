@@ -190,8 +190,36 @@ class Hand {
 		this.ranks.sort((a, b) => a - b);
 	}
 
-	score() {
+	displayHand() {
+		let display = '';
 
+		for (let card of this.cards) {
+			display += `${card.rank}${card.suit[0]} `;
+		}
+
+		return display.trim();
+	}
+
+	score() {
+		if (this.isFlush() && this.isStraight()) {
+			return this.ranks[0] === 10 ? `Royal Flush` : `Straight Flush`;
+		} else if (this.checkMatches(4)) {
+			return `Four of a Kind`;
+		} else if (this.checkMatches(3) && this.checkMatches(2)) {
+			return `Full House`;
+		} else if (this.isFlush()) {
+			return `Flush`;
+		} else if (this.isStraight()) {
+			return `Straight`;
+		} else if (this.checkMatches(3)) {
+			return `Three of a Kind`
+		} else if (this.checkPairs()) {
+			return `Two Pair`;
+		} else if (this.checkMatches(2)) {
+			return `Pair`;
+		} else {
+			return `High Card`;
+		}
 	}
 
 	isFlush() {
@@ -203,16 +231,22 @@ class Hand {
 	}
 
 	isStraight() {
-		for (let i = 0; i < this.ranks.length - 1; i++) {
-			if (this.ranks[i + 1] - this.ranks[i] !== 1) {
-				return false;
-			}
+		const straights = '1234567891011121314';
+		const aceInHand = this.ranks.includes(14);
+
+		if (aceInHand) {
+			const aceLow = [...this.ranks];
+			aceLow.splice(aceLow.length - 1, 1, 1);
+			aceLow.sort((a,b) => a - b);
+			
+			// check for wheel (ace low) and ace high
+			return straights.includes(aceLow.join('')) || straights.includes(this.ranks.join(''));
+		} else {
+			return straights.includes(this.ranks.join(''));
 		}
-		return true;
 	}
 
-	checkMatches(num) {
-		// list of cards
+	checkMatches(numCards) {
 		let matches = {};
 
 		for (const rank of this.ranks) {
@@ -220,14 +254,27 @@ class Hand {
 		}
 
 		for (const match in matches) {
-			if (matches[match] === num) {
+			if (matches[match] === numCards) {
 				return true;
 			}
 		}
 	}
 
 	checkPairs() {
+		let matches = {};
+		let numPairs = 0;
 
+		for (const rank of this.ranks) {
+			matches[rank] = matches[rank] + 1 || 1;
+		}
+
+		for (const match in matches) {
+			if (matches[match] === 2) {
+				numPairs += 1;
+			}
+		}
+
+		return numPairs === 2 ? true : false;
 	}
 }
 
@@ -258,8 +305,12 @@ class Card {
 	}
 }
 
+/*
+** TEST DECK
+** TEST DECK
+** TEST DECK
+*/
 let testDeck = new TestDeck;
-
 const handRoyalFlush = testDeck.dealRoyalFlush();
 const handStraightFlush = testDeck.dealStraightFlush();
 const handFourOfAKind = testDeck.dealFourOfAKind();
@@ -271,3 +322,15 @@ const handThreeOfAKind = testDeck.dealThreeOfAKind();
 const handTwoPair = testDeck.dealTwoPair();
 const handPair = testDeck.dealPair();
 const handHighCard = testDeck.dealHighCard();
+
+console.log(`ROYAL FLUSH \n(${handRoyalFlush.displayHand()}): ${handRoyalFlush.score()}\n`);
+console.log(`STRAIGHT FLUSH \n(${handStraightFlush.displayHand()}): ${handStraightFlush.score()}\n`);
+console.log(`4-KIND \n(${handFourOfAKind.displayHand()}): ${handFourOfAKind.score()}\n`);
+console.log(`FULL HOUSE \n(${handFullHouse.displayHand()}): ${handFullHouse.score()}\n`);
+console.log(`FLUSH \n(${handFlush.displayHand()}): ${handFlush.score()}\n`);
+console.log(`STRAIGHT \n(${handStraight.displayHand()}): ${handStraight.score()}\n`);
+console.log(`WHEEL \n(${handWheel.displayHand()}): ${handWheel.score()}\n`);
+console.log(`3-KIND \n(${handThreeOfAKind.displayHand()}): ${handThreeOfAKind.score()}\n`);
+console.log(`TWO PAIR \n(${handTwoPair.displayHand()}): ${handTwoPair.score()}\n`);
+console.log(`PAIR \n(${handPair.displayHand()}): ${handPair.score()}\n`);
+console.log(`HIGH CARD \n(${handHighCard.displayHand()}): ${handHighCard.score()}\n`);
