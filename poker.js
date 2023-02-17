@@ -190,6 +190,10 @@ class Hand {
 		this.ranks.sort((a, b) => a - b);
 	}
 
+	score() {
+
+	}
+
 	isFlush() {
 		for (const suit in this.suits) {
 			if (this.suits[suit] === 5)
@@ -254,10 +258,16 @@ class Card {
 	}
 }
 
-let deck = new TestDeck;
+let testDeck = new TestDeck;
 
-let hand = deck.dealFlush();
-
-// test hand
-console.log(hand.cards)
-console.log(hand.checkMatches())
+const handRoyalFlush = testDeck.dealRoyalFlush();
+const handStraightFlush = testDeck.dealStraightFlush();
+const handFourOfAKind = testDeck.dealFourOfAKind();
+const handFullHouse = testDeck.dealFullHouse();
+const handFlush = testDeck.dealFlush();
+const handStraight = testDeck.dealStraight();
+const handWheel = testDeck.dealWheel();
+const handThreeOfAKind = testDeck.dealThreeOfAKind();
+const handTwoPair = testDeck.dealTwoPair();
+const handPair = testDeck.dealPair();
+const handHighCard = testDeck.dealHighCard();
