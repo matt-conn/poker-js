@@ -170,6 +170,9 @@ class Hand {
 	constructor(cards) {
 		this.cards = cards || [];
 		this.ranks = [];
+		this.handTitle = '';
+		this.handScore = 0;
+		this.highCardScore;
 		this.suits = {
 			'Hearts': 0,
 			'Diamonds': 0,
@@ -200,26 +203,71 @@ class Hand {
 		return display.trim();
 	}
 
+	// score() {
+	// 	if (this.isFlush() && this.isStraight()) {
+	// 		return this.ranks[0] === 10 ? `Royal Flush` : `Straight Flush`;
+	// 	} else if (this.checkMatches(4)) {
+	// 		return `Four of a Kind`;
+	// 	} else if (this.checkMatches(3) && this.checkMatches(2)) {
+	// 		return `Full House`;
+	// 	} else if (this.isFlush()) {
+	// 		return `Flush`;
+	// 	} else if (this.isStraight()) {
+	// 		return `Straight`;
+	// 	} else if (this.checkMatches(3)) {
+	// 		return `Three of a Kind`
+	// 	} else if (this.checkPairs()) {
+	// 		return `Two Pair`;
+	// 	} else if (this.checkMatches(2)) {
+	// 		return `Pair`;
+	// 	} else {
+	// 		return `High Card`;
+	// 	}
+	// }
+
 	score() {
+		// https://stackoverflow.com/questions/9231409/scoring-hand-of-card-objects
+		// https://www.kequc.com/2016/07/31/how-to-score-a-poker-hand-in-javascript
 		if (this.isFlush() && this.isStraight()) {
-			return this.ranks[0] === 10 ? `Royal Flush` : `Straight Flush`;
+			// return this.ranks[0] === 10 ? `Royal Flush` : `Straight Flush`;
+			if (this.ranks[0] === 10) {
+				this.handTitle = 'Royal Flush';
+				this.handScore = 10000;
+			} else {
+				this.handTitle = 'Straight Flush';
+				this.handScore = 9000 + this.ranks[this.ranks.length - 1];
+			}
 		} else if (this.checkMatches(4)) {
-			return `Four of a Kind`;
+			this.handTitle = 'Four of a Kind';
+			let large = this.ranks[Math.ceil(this.ranks.length / 2)];
+			let small = (this.ranks[0] === large) ? this.ranks[this.ranks.length - 1] : this.ranks[0];
+			this.handScore = 8000 + (large * 50) + small;
 		} else if (this.checkMatches(3) && this.checkMatches(2)) {
-			return `Full House`;
+			this.handTitle = 'Full House';
+			let large = this.ranks[Math.ceil(this.ranks.length / 2)];
+			let small = (this.ranks[0] === large) ? this.ranks[this.ranks.length - 1] : this.ranks[0];
+			this.handScore = 7000 + (large * 50) + small;
 		} else if (this.isFlush()) {
-			return `Flush`;
+			this.handTitle = 'Flush';
+			this.handScore = 6000;
 		} else if (this.isStraight()) {
-			return `Straight`;
+			this.handTitle = 'Straight';
+			this.handScore = 5000 + this.ranks[this.ranks.length - 1];
 		} else if (this.checkMatches(3)) {
-			return `Three of a Kind`
+			this.handTitle = 'Three of A Kind';
+			this.handScore = 4000;
 		} else if (this.checkPairs()) {
-			return `Two Pair`;
+			this.handTitle = 'Two Pair';
+			this.handScore = 3000;
 		} else if (this.checkMatches(2)) {
-			return `Pair`;
+			this.handTitle = 'Pair';
+			this.handScore = 2000;
 		} else {
-			return `High Card`;
+			this.handTitle = 'High Card';
+			this.handScore = 1000;
 		}
+
+		return `Hand: ${this.handTitle} Rank: ${this.ranks.join('-')} Score: ${this.handScore}`
 	}
 
 	isFlush() {
@@ -235,12 +283,26 @@ class Hand {
 		const aceInHand = this.ranks.includes(14);
 
 		if (aceInHand) {
-			const aceLow = [...this.ranks];
-			aceLow.splice(aceLow.length - 1, 1, 1);
-			aceLow.sort((a,b) => a - b);
+			// const aceLow = [...this.ranks];
+			// aceLow.splice(aceLow.length - 1, 1, 1);
+			// aceLow.sort((a,b) => a - b);
 			
 			// check for wheel (ace low) and ace high
-			return straights.includes(aceLow.join('')) || straights.includes(this.ranks.join(''));
+			// return straights.includes(aceLow.join('')) || straights.includes(this.ranks.join(''));
+
+			let isWheel = false;
+			const rankCopy = [...this.ranks];
+			rankCopy.splice(rankCopy.length - 1, 1, 1);
+			rankCopy.sort((a,b) => a - b);
+			isWheel = straights.includes(rankCopy.join(''));
+
+			if (isWheel) {
+				this.ranks = rankCopy;
+				return true;
+			} else {
+				return straights.includes(this.ranks.join(''));
+			}
+
 		} else {
 			return straights.includes(this.ranks.join(''));
 		}
