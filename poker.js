@@ -44,6 +44,17 @@ class Deck {
 }
 
 class TestDeck {
+	dealTestHand(c1, c2, c3, c4, c5) {
+		const hand = new Hand();
+		hand.addCard(new Card(c1[0], c1[1]));
+		hand.addCard(new Card(c2[0], c2[1]));
+		hand.addCard(new Card(c3[0], c3[1]));
+		hand.addCard(new Card(c4[0], c4[1]));
+		hand.addCard(new Card(c5[0], c5[1]));
+
+		return hand;
+	}
+
 	dealRoyalFlush() {
 		const hand = new Hand();
 		hand.addCard(new Card("10", "Hearts"));
@@ -225,80 +236,75 @@ class Hand {
 	// }
 
 	score() {
-		const factor = {
-			"Royal Flush": 10,
-			"Straight Flush": 9,
-			"Four of a Kind": 8,
-			"Full House": 7,
-			"Flush": 6,
-			"Straight": 5,
-			"Three of a Kind": 4,
-			"Two Pair": 3,
-			"Pair": 2,
-			"High Card": 1,
-		};
-
+		// determine the hand
 		if (this.isFlush() && this.isStraight()) {
 			if (this.ranks[0] === 10) {
 				this.handTitle = "Royal Flush";
-				this.handScore = factor[this.handTitle] * 10000000000 + valueOfHand(this.ranks);
+				this.handScore = valueOfHand(this.handTitle, this.ranks);
 			} else {
 				this.handTitle = "Straight Flush";
-				this.handScore = factor[this.handTitle] * 10000000000 + valueOfHand(this.ranks);
+				this.handScore = valueOfHand(this.handTitle, this.ranks);
 			}
 		} else if (this.checkMatches(4)) {
 			this.handTitle = "Four of a Kind";
-			const match = this.ranks[Math.floor(this.ranks.length / 2)];
-			const other = this.ranks[0] === match ? this.ranks[this.ranks.length - 1] : this.ranks[0];
-			this.handScore = factor[this.handTitle] * 10000000000 + match * 50 + other;
 		} else if (this.checkMatches(3) && this.checkMatches(2)) {
 			this.handTitle = "Full House";
-			const match = this.ranks[Math.floor(this.ranks.length / 2)];
-			const other = this.ranks[0] === match ? this.ranks[this.ranks.length - 1] : this.ranks[0];
-			this.handScore = factor[this.handTitle] * 10000000000 + match * 50 + other;
+			let match = [];
+			let off = [];
+
+			this.ranks.map((num) => {
+				if (num === this.ranks[Math.floor(this.ranks.length / 2)]) {
+					match.push(num);
+				} else {
+					off.push(num);
+				}
+			});
+
+			this.handScore = valueOfHand(this.handTitle, match, off);
 		} else if (this.isFlush()) {
 			this.handTitle = "Flush";
-			this.handScore = factor[this.handTitle] * 10000000000 + valueOfHand(this.ranks);
 		} else if (this.isStraight()) {
 			this.handTitle = "Straight";
-			this.handScore = factor[this.handTitle] * 10000000000 + valueOfHand(this.ranks);
 		} else if (this.checkMatches(3)) {
 			this.handTitle = "Three of a Kind";
-			const match = this.ranks[Math.floor(this.ranks.length / 2)];
-			let otherValue = "";
-			let other = this.ranks
-				.filter((rank) => Number(rank) !== Number(match))
-				.sort((a, b) => b - a)
-				.map((num) => {
-					otherValue += num >= 10 ? num : `0${num}`;
-				});
-			this.handScore = factor[this.handTitle] * 10000000000 + match * 10000 + Number(otherValue);
 		} else if (this.checkPairs()) {
 			this.handTitle = "Two Pair";
-			var duplicates = this.ranks.reduce(function (acc, el, i, arr) {
-				if (arr.indexOf(el) !== i && acc.indexOf(el) < 0) acc.push(el);
-				return acc;
-			}, []);
-			console.log(duplicates);
-			this.handScore = factor[this.handTitle] * 10000000000;
 		} else if (this.checkMatches(2)) {
 			this.handTitle = "Pair";
-			this.handScore = 2000;
 		} else {
 			this.handTitle = "High Card";
-			this.handScore = factor[this.handTitle] * 10000000000 + valueOfHand(this.ranks);
 		}
 
-		function valueOfHand(handRanks) {
+		// score the hand
+		function valueOfHand(hand, match = [], off = []) {
+			const factor = {
+				"Royal Flush": 10,
+				"Straight Flush": 9,
+				"Four of a Kind": 8,
+				"Full House": 7,
+				"Flush": 6,
+				"Straight": 5,
+				"Three of a Kind": 4,
+				"Two Pair": 3,
+				"Pair": 2,
+				"High Card": 1,
+			};
+
 			let handString = "";
 
-			for (let i = handRanks.length - 1; i >= 0; i--) {
-				handString += handRanks[i] >= 10 ? handRanks[i] : `0${handRanks[i]}`;
+			for (const rank of match.sort((a, b) => b - a)) {
+				handString += rank >= 10 ? rank : `0${rank}`;
 			}
 
-			return parseInt(handString);
+			for (const rank of off.sort((a, b) => b - a)) {
+				handString += rank >= 10 ? rank : `0${rank}`;
+			}
+
+			return factor[hand] * 10000000000 + Number(handString);
 		}
 
+		// return results
+		// this.handScore = factor[this.handTitle] * 10000000000 + valueOfHand(this.ranks);
 		return `Hand: ${this.handTitle} Rank: ${this.ranks.join("-")} Score: ${this.handScore}`;
 	}
 
@@ -415,14 +421,32 @@ const handTwoPair = testDeck.dealTwoPair();
 const handPair = testDeck.dealPair();
 const handHighCard = testDeck.dealHighCard();
 
-// console.log(`ROYAL FLUSH (${handRoyalFlush.displayHand()}): \n${handRoyalFlush.score()}\n`);
-// console.log(`STRAIGHT FLUSH (${handStraightFlush.displayHand()}): \n${handStraightFlush.score()}\n`);
+console.log(`ROYAL FLUSH (${handRoyalFlush.displayHand()}): \n${handRoyalFlush.score()}\n`);
+console.log(`STRAIGHT FLUSH (${handStraightFlush.displayHand()}): \n${handStraightFlush.score()}\n`);
 // console.log(`4-KIND (${handFourOfAKind.displayHand()}): \n${handFourOfAKind.score()}\n`);
-// console.log(`FULL HOUSE (${handFullHouse.displayHand()}): \n${handFullHouse.score()}\n`);
+console.log(`FULL HOUSE (${handFullHouse.displayHand()}): \n${handFullHouse.score()}\n`);
 // console.log(`FLUSH (${handFlush.displayHand()}): \n${handFlush.score()}\n`);
 // console.log(`STRAIGHT (${handStraight.displayHand()}): \n${handStraight.score()}\n`);
 // console.log(`WHEEL (${handWheel.displayHand()}): \n${handWheel.score()}\n`);
 // console.log(`3-KIND (${handThreeOfAKind.displayHand()}): \n${handThreeOfAKind.score()}\n`);
-console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n`);
-console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
-console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
+// console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n`);
+// console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
+// console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
+
+// test full house
+const fullHouseOne = testDeck.dealTestHand(
+	["5", "Hearts"],
+	["5", "Diamonds"],
+	["5", "Clubs"],
+	["J", "Hearts"],
+	["J", "Hearts"]
+);
+const fullHouseTwo = testDeck.dealTestHand(
+	["2", "Hearts"],
+	["2", "Diamonds"],
+	["2", "Clubs"],
+	["A", "Hearts"],
+	["A", "Hearts"]
+);
+console.log(`FULL HOUSE 1 (${fullHouseOne.displayHand()}): \n${fullHouseOne.score()}\n`);
+console.log(`FULL HOUSE 2 (${fullHouseTwo.displayHand()}): \n${fullHouseTwo.score()}\n`);
