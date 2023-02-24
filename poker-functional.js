@@ -103,6 +103,4 @@ function pokerScore(hand) {
 	};
 
 	// base score + score of cards
-	//! would work for all hands besides full house
-	//! 66622 would lose to a 555JJ
 }
