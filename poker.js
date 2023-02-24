@@ -247,6 +247,18 @@ class Hand {
 			}
 		} else if (this.checkMatches(4)) {
 			this.handTitle = "Four of a Kind";
+			let match = [];
+			let off = [];
+
+			this.ranks.map((num) => {
+				if (num === this.ranks[Math.floor(this.ranks.length / 2)]) {
+					match.push(num);
+				} else {
+					off.push(num);
+				}
+			});
+
+			this.handScore = valueOfHand(this.handTitle, match, off);
 		} else if (this.checkMatches(3) && this.checkMatches(2)) {
 			this.handTitle = "Full House";
 			let match = [];
@@ -263,16 +275,58 @@ class Hand {
 			this.handScore = valueOfHand(this.handTitle, match, off);
 		} else if (this.isFlush()) {
 			this.handTitle = "Flush";
+			this.handScore = valueOfHand(this.handTitle, this.ranks);
 		} else if (this.isStraight()) {
 			this.handTitle = "Straight";
+			this.handScore = valueOfHand(this.handTitle, this.ranks);
 		} else if (this.checkMatches(3)) {
 			this.handTitle = "Three of a Kind";
+			let match = [];
+			let off = [];
+
+			this.ranks.map((num) => {
+				if (num === this.ranks[Math.floor(this.ranks.length / 2)]) {
+					match.push(num);
+				} else {
+					off.push(num);
+				}
+			});
+
+			this.handScore = valueOfHand(this.handTitle, match, off);
 		} else if (this.checkPairs()) {
 			this.handTitle = "Two Pair";
+
+			const match = this.ranks.reduce(function (acc, rank, index, arr) {
+				if (arr.indexOf(rank) !== index && acc.indexOf(rank) < 0) {
+					acc.push(rank);
+					acc.push(rank);
+				}
+				return acc;
+			}, []);
+
+			const off = this.ranks.filter((rank) => {
+				return !match.includes(rank);
+			});
+
+			this.handScore = valueOfHand(this.handTitle, match, off);
 		} else if (this.checkMatches(2)) {
 			this.handTitle = "Pair";
+			const match = this.ranks.reduce(function (acc, rank, index, arr) {
+				if (arr.indexOf(rank) !== index && acc.indexOf(rank) < 0) {
+					acc.push(rank);
+					acc.push(rank);
+				}
+				return acc;
+			}, []);
+
+			const off = this.ranks.filter((rank) => {
+				return !match.includes(rank);
+			});
+
+			this.handScore = valueOfHand(this.handTitle, match, off);
 		} else {
 			this.handTitle = "High Card";
+			this.handScore = valueOfHand(this.handTitle, this.ranks);
 		}
 
 		// score the hand
@@ -423,15 +477,15 @@ const handHighCard = testDeck.dealHighCard();
 
 console.log(`ROYAL FLUSH (${handRoyalFlush.displayHand()}): \n${handRoyalFlush.score()}\n`);
 console.log(`STRAIGHT FLUSH (${handStraightFlush.displayHand()}): \n${handStraightFlush.score()}\n`);
-// console.log(`4-KIND (${handFourOfAKind.displayHand()}): \n${handFourOfAKind.score()}\n`);
+console.log(`4-KIND (${handFourOfAKind.displayHand()}): \n${handFourOfAKind.score()}\n`);
 console.log(`FULL HOUSE (${handFullHouse.displayHand()}): \n${handFullHouse.score()}\n`);
-// console.log(`FLUSH (${handFlush.displayHand()}): \n${handFlush.score()}\n`);
-// console.log(`STRAIGHT (${handStraight.displayHand()}): \n${handStraight.score()}\n`);
-// console.log(`WHEEL (${handWheel.displayHand()}): \n${handWheel.score()}\n`);
-// console.log(`3-KIND (${handThreeOfAKind.displayHand()}): \n${handThreeOfAKind.score()}\n`);
-// console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n`);
-// console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
-// console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
+console.log(`FLUSH (${handFlush.displayHand()}): \n${handFlush.score()}\n`);
+console.log(`STRAIGHT (${handStraight.displayHand()}): \n${handStraight.score()}\n`);
+console.log(`WHEEL (${handWheel.displayHand()}): \n${handWheel.score()}\n`);
+console.log(`3-KIND (${handThreeOfAKind.displayHand()}): \n${handThreeOfAKind.score()}\n`);
+console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n`);
+console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
+console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
 
 // test full house
 const fullHouseOne = testDeck.dealTestHand(
@@ -448,5 +502,3 @@ const fullHouseTwo = testDeck.dealTestHand(
 	["A", "Hearts"],
 	["A", "Hearts"]
 );
-console.log(`FULL HOUSE 1 (${fullHouseOne.displayHand()}): \n${fullHouseOne.score()}\n`);
-console.log(`FULL HOUSE 2 (${fullHouseTwo.displayHand()}): \n${fullHouseTwo.score()}\n`);
