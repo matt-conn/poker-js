@@ -213,28 +213,6 @@ class Hand {
 		return display.trim();
 	}
 
-	// score() {
-	// 	if (this.isFlush() && this.isStraight()) {
-	// 		return this.ranks[0] === 10 ? `Royal Flush` : `Straight Flush`;
-	// 	} else if (this.checkMatches(4)) {
-	// 		return `Four of a Kind`;
-	// 	} else if (this.checkMatches(3) && this.checkMatches(2)) {
-	// 		return `Full House`;
-	// 	} else if (this.isFlush()) {
-	// 		return `Flush`;
-	// 	} else if (this.isStraight()) {
-	// 		return `Straight`;
-	// 	} else if (this.checkMatches(3)) {
-	// 		return `Three of a Kind`
-	// 	} else if (this.checkPairs()) {
-	// 		return `Two Pair`;
-	// 	} else if (this.checkMatches(2)) {
-	// 		return `Pair`;
-	// 	} else {
-	// 		return `High Card`;
-	// 	}
-	// }
-
 	score() {
 		// determine the hand
 		if (this.isFlush() && this.isStraight()) {
@@ -374,13 +352,6 @@ class Hand {
 		const aceInHand = this.ranks.includes(14);
 
 		if (aceInHand) {
-			// const aceLow = [...this.ranks];
-			// aceLow.splice(aceLow.length - 1, 1, 1);
-			// aceLow.sort((a,b) => a - b);
-
-			// check for wheel (ace low) and ace high
-			// return straights.includes(aceLow.join('')) || straights.includes(this.ranks.join(''));
-
 			let isWheel = false;
 			const rankCopy = [...this.ranks];
 			rankCopy.splice(rankCopy.length - 1, 1, 1);
