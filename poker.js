@@ -225,9 +225,6 @@ class Hand {
 	// }
 
 	score() {
-		// https://stackoverflow.com/questions/9231409/scoring-hand-of-card-objects
-		// https://www.kequc.com/2016/07/31/how-to-score-a-poker-hand-in-javascript
-
 		const factor = {
 			"Royal Flush": 10,
 			"Straight Flush": 9,
@@ -283,7 +280,7 @@ class Hand {
 				return acc;
 			}, []);
 			console.log(duplicates);
-			this.handScore = 3000;
+			this.handScore = factor[this.handTitle] * 10000000000;
 		} else if (this.checkMatches(2)) {
 			this.handTitle = "Pair";
 			this.handScore = 2000;
