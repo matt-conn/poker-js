@@ -8,10 +8,11 @@ export class Card {
 	}
 
 	getRankValue() {
-		type test = {
+		type Ranks = {
 			[key: string]: number;
 		}
-		let ranks: test = {
+
+		let ranks: Ranks = {
 			'2': 2,
 			'3': 3,
 			'4': 4,

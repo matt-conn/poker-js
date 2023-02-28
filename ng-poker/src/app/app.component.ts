@@ -12,7 +12,7 @@ export class AppComponent {
 	decks = 0;
 	shuffled = false;
 
-	constructor() {
+	constructor() {0
 		this.deck = new Deck;
 		this.onAddDeck();
 		this.onShuffleDeck();
