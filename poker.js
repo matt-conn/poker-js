@@ -459,17 +459,17 @@ const handTwoPair = testDeck.dealTwoPair();
 const handPair = testDeck.dealPair();
 const handHighCard = testDeck.dealHighCard();
 
-console.log(`ROYAL FLUSH (${handRoyalFlush.displayHand()}): \n${handRoyalFlush.score()}\n`);
-console.log(`STRAIGHT FLUSH (${handStraightFlush.displayHand()}): \n${handStraightFlush.score()}\n`);
-console.log(`4-KIND (${handFourOfAKind.displayHand()}): \n${handFourOfAKind.score()}\n`);
-console.log(`FULL HOUSE (${handFullHouse.displayHand()}): \n${handFullHouse.score()}\n`);
-console.log(`FLUSH (${handFlush.displayHand()}): \n${handFlush.score()}\n`);
-console.log(`STRAIGHT (${handStraight.displayHand()}): \n${handStraight.score()}\n`);
-console.log(`WHEEL (${handWheel.displayHand()}): \n${handWheel.score()}\n`);
-console.log(`3-KIND (${handThreeOfAKind.displayHand()}): \n${handThreeOfAKind.score()}\n`);
-console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n`);
-console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
-console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
+// console.log(`ROYAL FLUSH (${handRoyalFlush.displayHand()}): \n${handRoyalFlush.score()}\n`);
+// console.log(`STRAIGHT FLUSH (${handStraightFlush.displayHand()}): \n${handStraightFlush.score()}\n`);
+// console.log(`4-KIND (${handFourOfAKind.displayHand()}): \n${handFourOfAKind.score()}\n`);
+// console.log(`FULL HOUSE (${handFullHouse.displayHand()}): \n${handFullHouse.score()}\n`);
+// console.log(`FLUSH (${handFlush.displayHand()}): \n${handFlush.score()}\n`);
+// console.log(`STRAIGHT (${handStraight.displayHand()}): \n${handStraight.score()}\n`);
+// console.log(`WHEEL (${handWheel.displayHand()}): \n${handWheel.score()}\n`);
+// console.log(`3-KIND (${handThreeOfAKind.displayHand()}): \n${handThreeOfAKind.score()}\n`);
+// console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n`);
+// console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
+// console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
 
 // // test full house
 // const fullHouseOne = testDeck.dealTestHand(

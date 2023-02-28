@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 import { Deck } from './deck';
+import { Hand } from './hand';
+import { HandComponent } from './hand/hand.component';
 
 @Component({
 	selector: 'app-root',
@@ -8,30 +10,70 @@ import { Deck } from './deck';
 })
 export class AppComponent {
 	title = 'ng-poker';
-	deck: Deck
-	decks = 0;
+	playingDeck: Deck;
+	numDecks: number = 0;
+	numHands: number = 0;
+	hands:Hand[] = [];
+	winningIndex?: number;
 	shuffled = false;
 
-	constructor() {0
-		this.deck = new Deck;
+	constructor() {
+		this.playingDeck = new Deck;
 		this.onAddDeck();
+		this.numHands = Math.floor(this.playingDeck.deck.length / 5);
 		this.onShuffleDeck();
 	}
 
 	onAddDeck() {
-		this.decks += 1;
-		this.deck.addDeck();
+		this.numDecks += 1;
+		this.playingDeck.addDeck();
+		this.numHands = Math.floor(this.playingDeck.deck.length / 5);
 		this.shuffled = false;
 	}
 
 	onClearDeck() {
-		this.decks = 0;
+		this.numDecks = 0;
 		this.shuffled = false;
-		this.deck.clearDeck();
+		this.numHands = 0;
+		this.playingDeck.clearDeck();
 	}
 
 	onShuffleDeck() {
-		this.deck.shuffleDeck();
+		this.playingDeck.shuffleDeck();
 		this.shuffled = true;
+	}
+
+	onDealHand() {
+		if (this.numHands > 0) {
+			const hand = new Hand();
+
+			for (let i = 0; i < 5; i++) {
+				hand.addCard(this.playingDeck.dealCard());
+			}
+
+			this.hands.push(hand);
+
+			this.numHands -= 1;
+		}
+	}
+
+	onClearHands() {
+		this.hands = [];
+	}
+
+	onScoreGame() {
+		let maxIndex = 0;
+
+		for (let hand of this.hands) {
+			hand.score();
+		}
+
+		for (let i = 0; i < this.hands.length; i++) {
+			if (this.hands[i].handScore > this.hands[maxIndex].handScore) {
+				maxIndex = i;
+			}
+		}
+
+		this.winningIndex = maxIndex;
 	}
 }

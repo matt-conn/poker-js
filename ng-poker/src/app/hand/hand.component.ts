@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Hand } from '../hand';
 
 @Component({
   selector: 'app-hand',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./hand.component.css']
 })
 export class HandComponent implements OnInit {
+	@Input() pokerHand: any;
 
-  constructor() { }
+  	constructor() { }
 
-  ngOnInit(): void {
-  }
+  	ngOnInit(): void {
+  	}
 
 }
