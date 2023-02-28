@@ -1,9 +1,8 @@
 class Deck {
 	constructor() {
-		this.deck = this.resetDeck();
+		this.deck = [];
 	}
 
-	// this method loads a standard deck, 2-A (one card per per suit).
 	resetDeck() {
 		let cards = [];
 		const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
@@ -15,7 +14,21 @@ class Deck {
 			cards.push(new Card(rank, "Clubs"));
 		}
 
-		return cards;
+		this.deck = cards;
+	}
+
+	addDeck() {
+		let cards = [];
+		const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+
+		for (let rank of ranks) {
+			cards.push(new Card(rank, "Hearts"));
+			cards.push(new Card(rank, "Diamonds"));
+			cards.push(new Card(rank, "Spades"));
+			cards.push(new Card(rank, "Clubs"));
+		}
+		
+		this.deck = this.deck.concat(cards);
 	}
 
 	// This method shuffles the deck.
@@ -458,18 +471,18 @@ console.log(`TWO PAIR (${handTwoPair.displayHand()}): \n${handTwoPair.score()}\n
 console.log(`PAIR (${handPair.displayHand()}): \n${handPair.score()}\n`);
 console.log(`HIGH CARD (${handHighCard.displayHand()}): \n${handHighCard.score()}\n`);
 
-// test full house
-const fullHouseOne = testDeck.dealTestHand(
-	["5", "Hearts"],
-	["5", "Diamonds"],
-	["5", "Clubs"],
-	["J", "Hearts"],
-	["J", "Hearts"]
-);
-const fullHouseTwo = testDeck.dealTestHand(
-	["2", "Hearts"],
-	["2", "Diamonds"],
-	["2", "Clubs"],
-	["A", "Hearts"],
-	["A", "Hearts"]
-);
+// // test full house
+// const fullHouseOne = testDeck.dealTestHand(
+// 	["5", "Hearts"],
+// 	["5", "Diamonds"],
+// 	["5", "Clubs"],
+// 	["J", "Hearts"],
+// 	["J", "Hearts"]
+// );
+// const fullHouseTwo = testDeck.dealTestHand(
+// 	["2", "Hearts"],
+// 	["2", "Diamonds"],
+// 	["2", "Clubs"],
+// 	["A", "Hearts"],
+// 	["A", "Hearts"]
+// );
