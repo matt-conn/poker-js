@@ -14,7 +14,7 @@ export class AppComponent {
 	numDecks: number = 0;
 	numHands: number = 0;
 	hands:Hand[] = [];
-	winningIndex?: number;
+	winningIndex?: number | null;
 	shuffled = false;
 
 	constructor() {
@@ -36,10 +36,15 @@ export class AppComponent {
 		this.shuffled = false;
 		this.numHands = 0;
 		this.playingDeck.clearDeck();
+		this.onClearHands();
 	}
 
 	onShuffleDeck() {
-		this.playingDeck.shuffleDeck();
+		// shuffle deck three times
+		for (let i = 0; i < 3; i++) {
+			this.playingDeck.shuffleDeck();
+		}
+
 		this.shuffled = true;
 	}
 
@@ -59,6 +64,7 @@ export class AppComponent {
 
 	onClearHands() {
 		this.hands = [];
+		this.winningIndex = null;
 	}
 
 	onScoreGame() {

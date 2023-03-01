@@ -1,3 +1,7 @@
+.toolbar spand {
+	text-align: center;
+}
+
 .shuffled {
 	stroke: darkgreen;
 }
@@ -11,4 +15,13 @@
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
+}
+
+.winner {
+	border: 1px solid darkgreen;
+	background: lightgreen;
+}
+
+.content + h1 {
+	font-style: 1.5rem !important;
 }

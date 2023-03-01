@@ -28,16 +28,31 @@ export class Deck {
 
 	// This method shuffles the deck.
 	shuffleDeck() {
-		let tempDeck = [...this.deck];
-		let shuffledDeck = [];
+		// let tempDeck = [...this.deck];
+		// let shuffledDeck = [];
 
-		while (tempDeck.length > 0) {
-			let randomIndex = Math.floor(Math.random() * tempDeck.length);
+		// while (tempDeck.length > 0) {
+		// 	let randomIndex = Math.floor(Math.random() * tempDeck.length);
 
-			shuffledDeck.push(tempDeck.splice(randomIndex, 1)[0]);
+		// 	shuffledDeck.push(tempDeck.splice(randomIndex, 1)[0]);
+		// }
+
+		// this.deck = shuffledDeck;
+
+		// fisher-yates shuffle (in-place)
+		// https://bost.ocks.org/mike/shuffle/
+		let m = this.deck.length;
+		let t, i;
+
+		while (m) {
+			// pick remaining element
+			i = Math.floor(Math.random() * m--);
+
+			// swap item
+			t = this.deck[m];
+			this.deck[m] = this.deck[i];
+			this.deck[i] = t;
 		}
-
-		this.deck = shuffledDeck;
 	}
 
 	// This method deals one card from the "top" of the deck.
